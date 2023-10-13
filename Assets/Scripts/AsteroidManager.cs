@@ -5,12 +5,26 @@ using UnityEngine;
 public class AsteroidManager : MonoBehaviour
 {
     [SerializeField] int NumberOfAsteroidsOfOnAxes= 10;
-    [SerializeField] Asteroid asteroid;
+    [SerializeField] GameObject pickupPrefab;
+    [SerializeField] Asteroid asteroidPrefab;
     [SerializeField] int gridSpacing =100;
-    // Start is called before the first frame update
+
+    public List<Asteroid> asteroid = new List<Asteroid>();   
     void Start()
     {
-        PlaceAsteroids();
+       // PlaceAsteroids();
+    }
+    private void OnEnable()
+    {
+        EventManager.onStartGame += PlaceAsteroids;
+        EventManager.onPlayerDeath += DestroyAsteroids;
+        EventManager.onRespawnPickUp += PlacePickUp;
+    }
+    private void OnDisable()
+    {
+        EventManager.onStartGame -= PlaceAsteroids;
+        EventManager.onPlayerDeath -= DestroyAsteroids;
+        EventManager.onRespawnPickUp -= PlacePickUp;
     }
     void PlaceAsteroids()
     {
@@ -25,21 +39,46 @@ public class AsteroidManager : MonoBehaviour
             }
             
         }
+        PlacePickUp();
+    }
+    void DestroyAsteroids()
+    {
+
+        foreach(Asteroid ast in asteroid)
+            ast.SelfDestruct();
+
+        asteroid.Clear();
     }
     void InstantiateAsteroid(int x,int y, int z)
     {
-        Instantiate(asteroid,
+        Asteroid temp= Instantiate(asteroidPrefab,
             new Vector3 (transform.position.x + (x * gridSpacing)+AsteroidOffset(),
                         transform.position.y+(y*gridSpacing)+AsteroidOffset(),
                         transform.position.z+(z*gridSpacing)+AsteroidOffset()), 
                         Quaternion.identity, 
-                        transform);
+                        transform) as Asteroid;
+
+        temp.name="Asteroid:"+x+ "-"+y+"-"+ z;
+
+
+        asteroid.Add(temp);
     }
+    void PlacePickUp()
+    {
+        int rnd=Random.Range(0,asteroid.Count);
+
+        Instantiate(pickupPrefab, asteroid[rnd].transform.position, Quaternion.identity);
+        Debug.Log("Destroying" + asteroid[rnd].name);
+       
+        Destroy(asteroid[rnd].gameObject);
+        asteroid.RemoveAt(rnd);
+                 
+    }
+
     float AsteroidOffset()
     {
         return Random.Range(-gridSpacing / 2f, gridSpacing / 2f);
     }
-    // Update is called once per frame
     void Update()
     {
         

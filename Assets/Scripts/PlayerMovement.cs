@@ -11,14 +11,11 @@ public class PlayerMovement : MonoBehaviour
     private void Awake()
     {
         myT = transform;
-    }
-    // Start is called before the first frame update
+    } 
     void Start()
     {
         
     }
-
-    // Update is called once per frame
     void Update()
     {
         Turn();
@@ -33,8 +30,23 @@ public class PlayerMovement : MonoBehaviour
     }
     void Thrust()
     {
-        if(Input.GetAxis("Vertical")>0)
-        myT.position += myT.forward * movementSpeed * Time.deltaTime * Input.GetAxis("Vertical");
+
+        if (Input.GetAxis("Vertical") > 0)
+        {
+            myT.position += myT.forward * movementSpeed * Time.deltaTime * Input.GetAxis("Vertical");
+
+            foreach (Thruster t in thruster)
+                t.Intensity(Input.GetAxis("Vertical"));
+        }
+    }
+       /* if (Input.GetKeyDown(KeyCode.W))
+            foreach (Thruster t in thruster)
+                t.Activate();
+
+        else if (Input.GetKeyUp(KeyCode.W))
+            foreach (Thruster t in thruster)
+                t.Activate(false);*/
+
 
     }
-}
+

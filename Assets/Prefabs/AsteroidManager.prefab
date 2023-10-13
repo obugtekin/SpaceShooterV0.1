@@ -45,5 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NumberOfAsteroidsOfOnAxes: 5
-  asteroid: {fileID: 2974422731179388300, guid: e36e3120d7b31b746a21c24a2488f5e4, type: 3}
-  gridSpacing: 25
+  pickupPrefab: {fileID: 1328990752589052, guid: cf80b8a50d670a242a669dd5146c189a, type: 3}
+  asteroidPrefab: {fileID: 2974422731179388300, guid: e36e3120d7b31b746a21c24a2488f5e4, type: 3}
+  gridSpacing: 50
+  asteroid: []

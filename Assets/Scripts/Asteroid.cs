@@ -2,11 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[DisallowMultipleComponent]
+[RequireComponent(typeof(Explosions))]
+
 public class Asteroid : MonoBehaviour
 {
     [SerializeField] float minScale = .8f;
     [SerializeField] float maxScale = 1.2f;
     [SerializeField] float rotationOffset = 100f;
+
+    public static float destructionDelay = 1.0f;
 
 
     Transform myT;
@@ -30,9 +35,22 @@ public class Asteroid : MonoBehaviour
         myT = transform;
 
     }
-    // Update is called once per frame
     void Update()
     {
         myT.Rotate(randomRotation * Time.deltaTime);
     }
+    public void SelfDestruct()
+    {
+
+        float timer = Random.Range(0,destructionDelay);
+
+        Invoke("GoBoom", timer);
+    }
+    public void GoBoom()
+    {
+        GetComponent<Explosions>().BlowUp();
+
+    }
+
+
 }

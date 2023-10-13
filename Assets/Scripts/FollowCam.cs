@@ -8,8 +8,6 @@ public class FollowCam : MonoBehaviour
     [SerializeField] Vector3 defaultDistance= new Vector3(0f,2f,-10f);
     [SerializeField] float DistanceDamp = 10f;
     //[SerializeField] float rotationelDamp = 10f;
-    
-
     Transform myT;
     public Vector3 velocity = Vector3.one;
     private void Awake()
@@ -18,8 +16,9 @@ public class FollowCam : MonoBehaviour
     }
     private void LateUpdate()
     {
+        if (!FindTarget())
+            return;
         SmoothFollow();
-
 
        /* Vector3 toPos = target.position + (target.rotation * defaultDistance);
         Vector3 curPos=Vector3.Lerp(myT.position, toPos, DistanceDamp*Time.deltaTime);
@@ -36,6 +35,21 @@ public class FollowCam : MonoBehaviour
         myT.position = curPos;
 
         myT.LookAt(target,target.up);
+    }
+    bool FindTarget()
+    {
+        if (target == null)
+        {
+            GameObject temp = GameObject.FindGameObjectWithTag("Player");
+
+            if (temp != null)
+                target = temp.transform;
+
+        }
+        if (target == null)
+            return false;
+
+        return true;
     }
     // Start is called before the first frame update
     void Start()
